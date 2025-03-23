@@ -141,3 +141,18 @@ async function createNewCoupon(userId) {
 
 	return newCoupon;
 }
+
+export const orderHistory = async (req, res) => {
+	try {
+		const orders = await Order.find({ user: req.user._id }).sort({ createdAt: -1 });
+
+		if (!orders) {
+			return res.status(404).json({ message: "No orders found" });
+		}
+
+		res.status(200).json({ orders });
+	} catch (error) {
+		console.error("Error fetching order history:", error);
+		res.status(500).json({ message: "Error fetching order history", error: error.message });
+	}
+};
